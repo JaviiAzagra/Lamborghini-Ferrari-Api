@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
 
 
 //* Devuelve las peliculas buscando por su ID
-router.get('/id/:id', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
     try {
         const id = req.params.id;
         const carToFind = await Car.findById(id);
