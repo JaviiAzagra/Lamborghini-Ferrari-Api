@@ -15,6 +15,16 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+router.get('/:id', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const ferrariToFind = await Ferrari.findById(id);
+        return res.status(200).json(ferrariToFind);
+    } catch (error) {
+        return next(error);
+    }
+});
+
 router.get('/name/:name', async (req, res, next) => {
     try {
         const name = req.params.name;
