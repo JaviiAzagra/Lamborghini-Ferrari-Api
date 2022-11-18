@@ -33,7 +33,7 @@ server.use(cors({
 }));
 
 server.use('/', indexRoutes);
-server.use('/cars', carsRoutes);
+server.use('/lamborghini', carsRoutes);
 server.use('/ferrari', ferrarisRoutes);
 server.use('/users', usersRoutes);
 
