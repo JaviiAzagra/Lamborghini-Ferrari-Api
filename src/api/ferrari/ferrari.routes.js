@@ -1,4 +1,5 @@
-const express = require('express')
+const express = require('express');
+const upload = require('../../middlewares/file');
 const Ferrari = require('./ferrari.model');
 require('dotenv').config();
 /* const upload = require('../../middlewares/file'); */
@@ -34,5 +35,20 @@ router.get('/name/:name', async (req, res, next) => {
         return next(error);
     }
 });
+
+router.post('/create', upload.single('img'), async (req, res, next) => {
+    try {
+        const ferrari = req.body;
+        if (req.file){
+            ferrari.img = req.file.path;
+        }
+        const newFerrari = new Ferrari(ferrari);
+        const created = await newFerrari.save();
+        return res.status(201).json({message: 'Se ha creado correctamente', created});
+    } catch (error) {
+        return next(error)
+    }
+});
+ 
 
 module.exports = router;

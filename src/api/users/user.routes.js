@@ -2,8 +2,9 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('./user.model');
 const { generateSign } = require('../../utils/jwt/jwt');
+const { isAdmin, isAuth } = require('../../middlewares/auth');
 const router = express.Router();
-
+const upload = require("../../middlewares/file");
 
 
 router.get('/', async (req, res) => {
@@ -57,6 +58,46 @@ router.post('/logout', async (req, res) => {
     }
 });
 
+router.delete("/delete/:id", [isAdmin], async (req, res, next) =>  {
+    try {
+      const id = req.params.id;
+      const userToDelete = await User.findByIdAndDelete(id);
+      deleteFile(userToDelete.photo);
+      return res.status(200).json({message: "The user has been deleted succesfully", userDeleted: userToDelete});
+    } catch (error) {
+     next(error);
+    }
+  });
+
+router.put("/edit/:id", [isAuth], upload.single("photo"), async (req, res, next) => {
+    try {
+      const id = req.params.id
+      const user = req.body;
+      const userOld = await User.findById(id);
+      if (req.file) {
+        if (userOld.photo) {
+          deleteFile(userOld.photo);
+        }
+        user.photo = req.file.path;
+      }
+      const userModify = new User(user);
+      userModify._id = id;
+      const userUpdated = await User.findByIdAndUpdate(id, userModify);
+      return res.status(200).json({message: "The user has been updated succesfully", userModified: userUpdated});
+    } catch (error) {
+      next(error)
+    }
+});
+
+router.post("/checksession", [isAuth], async (req, res, next) => {
+  console.log(req.headers.authorization);
+  try {
+    const getUser = await User.findById(req.user._id);
+    return res.status(200).json(getUser);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
 
 module.exports = router;
 

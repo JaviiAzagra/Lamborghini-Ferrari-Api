@@ -11,6 +11,7 @@ const userSchema = new Schema(
         firstName: {type: String, required: true, trim: true},
         lastName: {type: String, required: true, trim: true},
         photo: {type: String, required: false},
+        rol: {type: String, required: false, default:"user"},
     },
     {
         timestamps: true,
