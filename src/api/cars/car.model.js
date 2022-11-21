@@ -7,7 +7,7 @@ const carSchema = new Schema(
         model: {type: String, required: true, enum: ["aventador", "huracan", "urus", "diablo", "gallardo", "murcielago", "limited series"]},
         name: {type: String, required: true},
         price: {type: String, required: true},
-        power_cv: {type: Number, required: true},
+        power_cv: {type: String, required: true},
         max_speed: {type: String, required: true},
         img: {type: String}
     },
