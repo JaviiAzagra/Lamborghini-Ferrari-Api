@@ -4,6 +4,7 @@ require('dotenv').config();
 const upload = require('../../middlewares/file');
 const { isAuth } = require('../../middlewares/auth');
 const router = express.Router();
+const deleteFile = require("../../middlewares/deletefile");
 
 
 //* Devuelve todas las peliculas
@@ -79,10 +80,17 @@ router.post('/create', upload.single('img'), async (req, res, next) => {
     }
 });
  
-router.put('/edit/:id', async (req, res, next) => {
+router.put('/edit/:id', upload.single("img"), async (req, res, next) => {
     try {
         const id = req.params.id;
         const car = req.body;
+        const oldCar = await Car.findById(id);
+        if (req.file) {
+            if (oldCar.img) {
+            deleteFile(oldCar.img);
+            }
+        car.img = req.file.path;
+        }
         const carModify = new Car(car);
         carModify._id = id;
         const carUpdated = await Car.findByIdAndUpdate(id, carModify);

@@ -49,6 +49,36 @@ router.post('/create', upload.single('img'), async (req, res, next) => {
         return next(error)
     }
 });
+
+router.put('/edit/:id', upload.single("img"), async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const ferrari = req.body;
+        const oldFerrari = await Ferrari.findById(id);
+        if (req.file) {
+            if (oldFerrari.img) {
+            deleteFile(oldFerrari.img);
+            }
+        ferrari.img = req.file.path;
+        }
+        const ferrariModify = new Car(car);
+        ferrariModify._id = id;
+        const ferrariUpdated = await Ferrari.findByIdAndUpdate(id, ferrariModify);
+        return res.status(201).json({message: 'Editado correctamente', ferrariUpdated});
+    } catch (error) {
+        return next(error);
+    }
+});
+
+router.delete('/delete/:id', async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const ferrariToDelete = await Ferrari.findByIdAndDelete(id);
+      return res.status(201).json({message: 'Eliminado correctamente', ferrariToDelete});  
+    } catch (error) {
+        return next(error)
+    }
+});
  
 
 module.exports = router;
