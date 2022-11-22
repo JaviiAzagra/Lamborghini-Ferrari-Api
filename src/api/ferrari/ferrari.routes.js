@@ -61,7 +61,7 @@ router.put('/edit/:id', upload.single("img"), async (req, res, next) => {
             }
         ferrari.img = req.file.path;
         }
-        const ferrariModify = new Car(car);
+        const ferrariModify = new Ferrari(ferrari);
         ferrariModify._id = id;
         const ferrariUpdated = await Ferrari.findByIdAndUpdate(id, ferrariModify);
         return res.status(201).json({message: 'Editado correctamente', ferrariUpdated});
